@@ -1,0 +1,31 @@
+import requests
+from sense_emu import SenseHat
+
+sense = SenseHat()
+
+# Flask endpoint URL on your local machine
+FLASK_ENDPOINT = "http://xxxxx/update_orientation" //PUT YOUR IP 
+
+def get_orientation_data():
+    # Get sensor data (e.g., orientation) from Sense HAT emulator
+    orientation = sense.get_orientation_degrees()
+    return orientation
+
+def send_orientation_data(orientation):
+    print("Sending orientation", orientation)
+    try:
+        # Send HTTP POST request to update orientation on local machine
+        response = requests.post(FLASK_ENDPOINT, json={'orientation': orientation})
+        if response.status_code == 200:
+            print("Orientation updated successfully")
+        else:
+            print("Failed to update orientation")
+    except Exception as e:
+        print(f"Error sending orientation data: {e}")
+
+try:
+    while True:
+        orientation = get_orientation_data()
+        send_orientation_data(orientation)
+except KeyboardInterrupt:
+    pass
